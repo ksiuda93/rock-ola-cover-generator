@@ -1,5 +1,8 @@
 # Rock-Ola Cover Generator
 
+[![Deploy to GitHub Pages](https://github.com/ksiuda93/rock-ola-cover-generator/actions/workflows/deploy.yml/badge.svg)](https://github.com/ksiuda93/rock-ola-cover-generator/actions/workflows/deploy.yml)
+[![Live](https://img.shields.io/badge/Live-ksiuda93.github.io-cc0000?style=flat&logo=github)](https://ksiuda93.github.io/rock-ola-cover-generator/)
+
 Generate title strips for a jukebox machine.
 
 ## Usage
