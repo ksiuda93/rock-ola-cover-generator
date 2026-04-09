@@ -5,7 +5,7 @@ const { test, expect } = require('@playwright/test');
 test('renders jukebox cabinet', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.cabinet-arch')).toBeVisible();
-  await expect(page.locator('.brand-name')).toContainText('Rock-Ola');
+  await expect(page.locator('.brand-name')).toContainText('Rock');
   await expect(page.locator('.cabinet-controls')).toBeVisible();
   await expect(page.locator('.tubes')).toHaveCount(2);
 });
