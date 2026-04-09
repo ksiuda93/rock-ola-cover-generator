@@ -5,117 +5,165 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rock-Ola Cover Generator</title>
   <style>
-    /* === SCREEN === */
-    * { box-sizing: border-box; }
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── PAGE ── */
     body {
+      background: #111;
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f0f0f0;
-      color: #222;
-    }
-
-    h1 { font-size: 1.4rem; margin-bottom: 4px; }
-    p.hint { font-size: 0.85rem; color: #555; margin: 4px 0 12px; }
-
-    .controls {
-      background: white;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.15);
-    }
-
-    .row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
-
-    .col { flex: 1; min-width: 240px; }
-    label { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 4px; }
-
-    textarea {
-      width: 100%;
-      height: 140px;
-      font-family: monospace;
-      font-size: 0.8rem;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-    }
-
-    .file-zone {
-      border: 2px dashed #aaa;
-      border-radius: 4px;
-      padding: 12px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #666;
-      cursor: pointer;
-      min-height: 60px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: #fafafa;
+      padding: 30px 12px 50px;
     }
-    .file-zone:hover { border-color: #0000ff; background: #f0f4ff; }
-    .file-zone input[type=file] { display: none; }
 
-    .sep-row {
+    /* ══════════════════════════════
+       CABINET
+    ══════════════════════════════ */
+    .cabinet {
+      width: 100%;
+      max-width: 900px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+    }
+
+    /* ── ARCH ── */
+    .cabinet-arch {
+      background: linear-gradient(180deg, #fdf5e6 0%, #f0dfc0 100%);
+      border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+      border: 3px solid #8B4513;
+      border-bottom: none;
+      padding: clamp(20px, 4vw, 40px) 40px clamp(14px, 2vw, 22px);
+      text-align: center;
+      position: relative;
+    }
+    .cabinet-arch::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 8%; right: 8%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #b8860b 20%, #ffd700 50%, #b8860b 80%, transparent);
+    }
+    .brand-name {
+      font-family: Impact, 'Arial Black', sans-serif;
+      font-size: clamp(32px, 7vw, 72px);
+      font-weight: 900;
+      color: #cc0000;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.25), 0 0 30px rgba(204,0,0,0.15);
+      line-height: 1;
+    }
+    .brand-sub {
+      font-size: clamp(9px, 1.6vw, 14px);
+      color: #999;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ── GOLD TRIM ── */
+    .gold-trim {
+      height: 7px;
+      background: linear-gradient(90deg, #8B4513, #ffd700 25%, #b8860b 50%, #ffd700 75%, #8B4513);
+    }
+
+    /* ── BODY ── */
+    .cabinet-body {
+      background: #cc0000;
+      border-left: 3px solid #8B4513;
+      border-right: 3px solid #8B4513;
+      display: flex;
+      align-items: stretch;
+      padding: 14px 8px;
       gap: 8px;
-      margin: 10px 0;
-      font-size: 0.8rem;
-    }
-    .sep-row select {
-      padding: 3px 6px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      min-height: 360px;
     }
 
-    .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-
-    button {
-      padding: 8px 18px;
-      cursor: pointer;
-      border: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: bold;
+    /* ── BUBBLE TUBES ── */
+    .tubes {
+      width: clamp(20px, 4vw, 42px);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 2px 0;
     }
-    .btn-primary { background: #0000cc; color: white; }
-    .btn-primary:hover { background: #0000ff; }
-    .btn-print { background: #2a7a2a; color: white; }
-    .btn-print:hover { background: #3aaa3a; }
-
-    .stats {
-      font-size: 0.8rem;
-      color: #555;
-      margin-top: 8px;
+    .tube {
+      flex: 1;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      min-height: 36px;
+      box-shadow:
+        inset 2px 0 6px rgba(0,0,0,0.35),
+        inset -2px 0 4px rgba(255,255,255,0.1),
+        0 0 10px rgba(255,180,0,0.45);
+    }
+    .tube-a { background: linear-gradient(180deg, #ff7700 0%, #ffdd00 33%, #ff7700 66%, #ffdd00 100%); }
+    .tube-b { background: linear-gradient(180deg, #ffdd00 0%, #ff7700 33%, #ffdd00 66%, #ff7700 100%); }
+    .tube::before {
+      content: '';
+      position: absolute;
+      left: 15%; width: 70%; height: 18%;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      animation: bubble-rise 2.6s ease-in-out infinite;
+    }
+    .tube::after {
+      content: '';
+      position: absolute;
+      left: 20%; width: 60%; height: 12%;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      animation: bubble-rise 2.6s ease-in-out infinite;
+      animation-delay: 1.3s;
+    }
+    .tube:nth-child(2)::before  { animation-delay: 0.65s; }
+    .tube:nth-child(2)::after   { animation-delay: 1.95s; }
+    .tube:nth-child(3)::before  { animation-delay: 1.3s; }
+    .tube:nth-child(3)::after   { animation-delay: 0s; }
+    .tube:nth-child(4)::before  { animation-delay: 0.2s; }
+    .tube:nth-child(4)::after   { animation-delay: 1.5s; }
+    @keyframes bubble-rise {
+      0%   { bottom: -20%; opacity: 0; }
+      15%  { opacity: 0.75; }
+      85%  { opacity: 0.5; }
+      100% { bottom: 115%; opacity: 0; }
     }
 
-    /* === PREVIEW === */
-    .preview-wrapper {
-      background: white;
+    /* ── GLASS WINDOW ── */
+    .glass-window {
+      flex: 1;
+      background: rgba(0,0,0,0.42);
+      border: 2px solid rgba(255,255,255,0.15);
       border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.15);
-    }
-
-    .preview-title {
-      font-size: 0.85rem;
-      color: #555;
-      margin-bottom: 12px;
-    }
-
-    .cards-grid {
+      box-shadow: inset 0 2px 16px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,20,0.3);
+      overflow-y: auto;
+      padding: 12px;
       display: grid;
       grid-template-columns: repeat(auto-fill, 7.5cm);
       gap: 4mm;
+      justify-content: center;
+    }
+    .glass-window::-webkit-scrollbar { width: 6px; }
+    .glass-window::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 3px; }
+    .glass-window::-webkit-scrollbar-thumb { background: rgba(255,200,0,0.4); border-radius: 3px; }
+
+    .empty-msg {
+      color: rgba(255,255,255,0.35);
+      font-size: 0.85rem;
+      font-style: italic;
+      padding: 30px 10px;
+      text-align: center;
+      grid-column: 1/-1;
     }
 
-    /* === JUKEBOX CARD === */
+    /* ══════════════════════════════
+       JUKEBOX TITLE-STRIP CARD
+    ══════════════════════════════ */
     .jukebox-card {
       width: 7.5cm;
       height: 2.4cm;
@@ -126,7 +174,7 @@
       border: 1px solid #8a9db0;
     }
 
-    /* Blue horizontal bar */
+    /* Blue horizontal bar through centre */
     .j-bar {
       position: absolute;
       left: 0; right: 0;
@@ -135,204 +183,376 @@
       top: 1.03cm;
     }
 
-    /* White strip with blue border */
+    /* White strip centred on the bar — shows artist/title */
     .j-strip {
       position: absolute;
-      left: 1cm;
-      right: 1cm;
+      left: 1cm; right: 1cm;
       height: 0.55cm;
       background: white;
       border: 1.5px solid #0000ff;
       top: 0.925cm;
       display: flex;
       align-items: center;
+      justify-content: center;
       font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-
-    .j-side {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      padding: 0 3px;
-      font-size: 5.5pt;
-      line-height: 1;
+      font-size: 8pt;
+      font-weight: bold;
       overflow: hidden;
       white-space: nowrap;
-    }
-
-    .j-side-label {
-      font-weight: bold;
-      color: #0000ff;
-      font-size: 6pt;
-      margin-right: 2px;
-      flex-shrink: 0;
-    }
-
-    .j-side-text {
-      overflow: hidden;
       text-overflow: ellipsis;
+      padding: 0 4px;
     }
 
-    .j-sep {
-      width: 1px;
-      height: 70%;
-      background: #0000ff;
-      flex-shrink: 0;
-    }
-
-    /* Artist name — top area */
-    .j-title {
+    /* Side A — top area */
+    .j-side-a {
       position: absolute;
-      top: 0; left: 0.2cm; right: 0.2cm;
+      top: 0; left: 0; right: 0;
       height: 0.9cm;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 3px;
       font-family: Arial, sans-serif;
-      font-size: 8.5pt;
-      font-weight: bold;
-      text-align: center;
-      line-height: 1.1;
-      overflow: hidden;
-    }
-
-    /* Slot number — bottom left */
-    .j-num {
-      position: absolute;
-      bottom: 0.08cm;
-      left: 0.15cm;
-      font-size: 5.5pt;
-      color: #333;
-      font-family: Arial, sans-serif;
-    }
-
-    /* Optional info — bottom right */
-    .j-info {
-      position: absolute;
-      bottom: 0.08cm;
-      right: 0.15cm;
-      font-size: 5pt;
-      color: #444;
-      font-family: Arial, sans-serif;
-      text-align: right;
-      max-width: 3cm;
+      font-size: 7pt;
       overflow: hidden;
       white-space: nowrap;
+      padding: 0 0.2cm;
+    }
+
+    /* Side B — bottom area */
+    .j-side-b {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 0.9cm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-family: Arial, sans-serif;
+      font-size: 7pt;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0 0.2cm;
+    }
+
+    /* A / B label — black bold */
+    .j-label {
+      font-weight: bold;
+      color: #000;
+      font-size: 7pt;
+      flex-shrink: 0;
+    }
+
+    .j-song {
+      overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .empty-msg {
-      padding: 40px;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.9rem;
+    /* Slot number — top right */
+    .j-num {
+      position: absolute;
+      top: 0.05cm;
+      right: 0.12cm;
+      font-size: 5pt;
+      color: #555;
+      font-family: Arial, sans-serif;
     }
 
-    /* === PRINT === */
+    /* ── GOLD TRIM 2 ── */
+    .gold-trim-2 {
+      height: 5px;
+      background: linear-gradient(90deg, #8B4513, #ffd700 25%, #b8860b 50%, #ffd700 75%, #8B4513);
+    }
+
+    /* ══════════════════════════════
+       CONTROL PANEL
+    ══════════════════════════════ */
+    .cabinet-controls {
+      background: linear-gradient(180deg, #fdf5e6 0%, #f5e3be 100%);
+      border-left: 3px solid #8B4513;
+      border-right: 3px solid #8B4513;
+      padding: 16px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cp-label {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #8B4513;
+      font-weight: bold;
+    }
+
+    .cp-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .cp-csv {
+      flex: 1;
+      min-width: 200px;
+      min-height: 90px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      padding: 8px;
+      border: 1.5px solid #c8b88a;
+      border-radius: 4px;
+      background: #fffdf5;
+      resize: vertical;
+    }
+    .cp-csv:focus { outline: none; border-color: #8B4513; }
+
+    .cp-side {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 160px;
+    }
+
+    .cp-upload {
+      border: 2px dashed #b8860b;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #8B4513;
+      cursor: pointer;
+      background: rgba(184,134,11,0.06);
+      transition: background 0.15s;
+    }
+    .cp-upload:hover { background: rgba(184,134,11,0.14); }
+    .cp-upload input[type=file] { display: none; }
+
+    .cp-sep {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+    .cp-sep select {
+      flex: 1;
+      padding: 4px 6px;
+      border: 1.5px solid #c8b88a;
+      border-radius: 4px;
+      background: #fffdf5;
+      font-size: 0.78rem;
+    }
+
+    .cp-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-generate, .btn-print {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: filter 0.15s, transform 0.1s;
+    }
+    .btn-generate:active, .btn-print:active { transform: translateY(2px); }
+
+    .btn-generate {
+      background: radial-gradient(ellipse at 45% 30%, #ff5555, #aa0000);
+      color: white;
+      border: 2px solid #6a0000;
+      box-shadow: 0 5px 0 #6a0000, 0 0 12px rgba(200,0,0,0.35);
+    }
+    .btn-generate:hover { filter: brightness(1.1); }
+
+    .btn-print {
+      background: radial-gradient(ellipse at 45% 30%, #55bb55, #1a6a1a);
+      color: white;
+      border: 2px solid #0a3d0a;
+      box-shadow: 0 5px 0 #0a3d0a, 0 0 12px rgba(0,150,0,0.3);
+    }
+    .btn-print:hover { filter: brightness(1.1); }
+
+    .cp-stats {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #888;
+      font-style: italic;
+      min-height: 1.2em;
+    }
+
+    /* ── BASE ── */
+    .cabinet-base {
+      background: linear-gradient(180deg, #a0522d 0%, #6b3310 40%, #3d1900 100%);
+      height: 26px;
+      border-radius: 0 0 12px 12px;
+      border: 3px solid #2a1000;
+      border-top: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    /* ══════════════════════════════
+       PRINT
+    ══════════════════════════════ */
     @media print {
-      html, body {
-        margin: 0;
-        padding: 0;
+      body {
         background: white;
+        padding: 0;
+        display: block;
       }
 
-      .controls,
-      .preview-title {
-        display: none;
+      .cabinet-arch,
+      .gold-trim,
+      .cabinet-body .tubes,
+      .cabinet-controls,
+      .gold-trim-2,
+      .cabinet-base {
+        display: none !important;
       }
 
-      .preview-wrapper {
+      .cabinet-body {
+        background: none;
+        border: none;
+        padding: 0;
+        min-height: unset;
+      }
+
+      .glass-window {
+        background: none;
+        border: none;
         box-shadow: none;
-        border-radius: 0;
+        overflow: visible;
         padding: 5mm;
-        margin: 0;
-      }
-
-      .cards-grid {
         grid-template-columns: repeat(2, 7.5cm);
         gap: 2mm;
       }
 
       .jukebox-card {
         break-inside: avoid;
+        page-break-inside: avoid;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        page-break-inside: avoid;
       }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .tubes { width: 16px; }
+      .tube::after { display: none; }
+      .glass-window { padding: 8px; gap: 3mm; }
+      .cp-row { flex-direction: column; }
+      .cp-side { min-width: unset; width: 100%; }
     }
   </style>
 </head>
 <body>
 
-<div class="controls">
-  <h1>Rock-Ola Cover Generator</h1>
-  <p class="hint">Paste CSV data or upload a .csv file. Columns: <code>Title</code>, <code>SideA</code>, <code>SideB</code> (optional: <code>Num</code>, <code>Info</code>)</p>
+<div class="cabinet">
 
-  <div class="row">
-    <div class="col">
-      <label>CSV data:</label>
-      <textarea id="csvInput">Title,SideA,SideB
+  <!-- ── ARCH ── -->
+  <div class="cabinet-arch">
+    <div class="brand-name">Rock&#8209;Ola</div>
+    <div class="brand-sub">Cover Generator</div>
+  </div>
+
+  <div class="gold-trim"></div>
+
+  <!-- ── BODY ── -->
+  <div class="cabinet-body">
+
+    <!-- Left tubes -->
+    <div class="tubes">
+      <div class="tube tube-a"></div>
+      <div class="tube tube-b"></div>
+      <div class="tube tube-a"></div>
+      <div class="tube tube-b"></div>
+    </div>
+
+    <!-- Glass window — card grid -->
+    <div class="glass-window" id="cards">
+      <div class="empty-msg">Click &ldquo;Generate&rdquo; to see your title strips.</div>
+    </div>
+
+    <!-- Right tubes -->
+    <div class="tubes">
+      <div class="tube tube-b"></div>
+      <div class="tube tube-a"></div>
+      <div class="tube tube-b"></div>
+      <div class="tube tube-a"></div>
+    </div>
+
+  </div>
+
+  <div class="gold-trim-2"></div>
+
+  <!-- ── CONTROL PANEL ── -->
+  <div class="cabinet-controls">
+    <div class="cp-label">&#9670; Control Panel &#9670;</div>
+
+    <div class="cp-row">
+      <textarea class="cp-csv" id="csvInput">Title,SideA,SideB
 ABBA,Fernando,Life
 The Beatles,Hey Jude,Revolution
 Elvis Presley,Hound Dog,Don't Be Cruel
 Rolling Stones,Satisfaction,Play with Fire
 Frank Sinatra,My Way,New York New York
 Queen,Bohemian Rhapsody,We Will Rock You</textarea>
-    </div>
-    <div class="col">
-      <label>Or upload a CSV file:</label>
-      <div class="file-zone" onclick="document.getElementById('fileInput').click()">
-        <div>&#128193; Click to select a file</div>
-        <div style="font-size:0.7rem">(.csv, .txt)</div>
-        <input type="file" id="fileInput" accept=".csv,.txt" onchange="loadFile(this)">
+
+      <div class="cp-side">
+        <div class="cp-upload" onclick="document.getElementById('fileInput').click()">
+          &#128193; Upload CSV file
+          <div style="font-size:0.68rem;color:#aaa;margin-top:3px;">(.csv or .txt)</div>
+          <input type="file" id="fileInput" accept=".csv,.txt" onchange="loadFile(this)">
+        </div>
+
+        <div class="cp-sep">
+          <span>Sep:</span>
+          <select id="separator">
+            <option value="auto">Auto</option>
+            <option value=",">Comma (,)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="&#9;">Tab</option>
+          </select>
+        </div>
+
+        <div class="cp-buttons">
+          <button class="btn-generate" onclick="generate()">&#9654; Generate</button>
+          <button class="btn-print" onclick="window.print()">&#128438; Print</button>
+        </div>
       </div>
-
-      <div class="sep-row">
-        <span>Column separator:</span>
-        <select id="separator">
-          <option value="auto">Auto (,  or  ;)</option>
-          <option value=",">Comma (,)</option>
-          <option value=";">Semicolon (;)</option>
-          <option value="\t">Tab</option>
-        </select>
-      </div>
     </div>
+
+    <div class="cp-stats" id="stats"></div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn-primary" onclick="generate()">&#9654; Generate covers</button>
-    <button class="btn-print" onclick="window.print()">&#128438; Print</button>
-  </div>
-  <div class="stats" id="stats"></div>
-</div>
+  <!-- ── BASE ── -->
+  <div class="cabinet-base"></div>
 
-<div class="preview-wrapper">
-  <div class="preview-title" id="previewTitle">Preview — cards 7.5 &times; 2.4 cm</div>
-  <div class="cards-grid" id="cards">
-    <div class="empty-msg">Click &ldquo;Generate covers&rdquo; to see a preview.</div>
-  </div>
-</div>
+</div><!-- /cabinet -->
 
 <script>
   /* Detect separator */
   function detectSep(text) {
-    const firstLine = text.split('\n')[0];
-    const commas = (firstLine.match(/,/g)  || []).length;
-    const semis  = (firstLine.match(/;/g)  || []).length;
-    const tabs   = (firstLine.match(/\t/g) || []).length;
-    if (tabs >= commas && tabs >= semis)  return '\t';
-    if (semis >= commas && semis >= tabs) return ';';
+    const first = text.split('\n')[0];
+    const c = (first.match(/,/g)  || []).length;
+    const s = (first.match(/;/g)  || []).length;
+    const t = (first.match(/\t/g) || []).length;
+    if (t >= c && t >= s) return '\t';
+    if (s >= c && s >= t) return ';';
     return ',';
   }
 
-  /* CSV parser (handles quoted fields) */
+  /* CSV parser — handles quoted fields */
   function parseCSV(text, sep) {
     if (sep === 'auto' || !sep) sep = detectSep(text);
-
     const rows = [];
-    const lines = text.trim().split(/\r?\n/);
-    for (const line of lines) {
+    for (const line of text.trim().split(/\r?\n/)) {
       if (!line.trim()) continue;
       const cols = [];
       let cur = '', inQ = false;
@@ -341,7 +561,7 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
         if (ch === '"') {
           if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
           else inQ = !inQ;
-        } else if (!inQ && line[i] === sep) {
+        } else if (!inQ && ch === sep) {
           cols.push(cur.trim()); cur = '';
         } else {
           cur += ch;
@@ -353,7 +573,6 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     return rows;
   }
 
-  /* Load file */
   function loadFile(input) {
     const file = input.files[0];
     if (!file) return;
@@ -365,7 +584,6 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     reader.readAsText(file, 'UTF-8');
   }
 
-  /* Escape HTML */
   function esc(s) {
     return String(s)
       .replace(/&/g, '&amp;')
@@ -373,15 +591,14 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
       .replace(/>/g, '&gt;');
   }
 
-  /* Generate cards */
   function generate() {
     const raw = document.getElementById('csvInput').value;
     const sep = document.getElementById('separator').value;
     const rows = parseCSV(raw, sep);
+    const container = document.getElementById('cards');
 
     if (rows.length < 2) {
-      document.getElementById('cards').innerHTML =
-        '<div class="empty-msg">No data — check your CSV format.</div>';
+      container.innerHTML = '<div class="empty-msg">No data — check your CSV format.</div>';
       return;
     }
 
@@ -390,51 +607,40 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     const idxA     = headers.indexOf('sidea');
     const idxB     = headers.indexOf('sideb');
     const idxNum   = headers.indexOf('num');
-    const idxInfo  = headers.indexOf('info');
 
-    const data = rows.slice(1);
-    const container = document.getElementById('cards');
     container.innerHTML = '';
+    let count = 0;
 
-    let cardCount = 0;
+    rows.slice(1).forEach((cols, i) => {
+      if (cols.every(c => !c)) return;
 
-    data.forEach((cols, i) => {
-      if (cols.every(c => !c)) return; // skip empty rows
-
-      const title = idxTitle >= 0 ? (cols[idxTitle] || '') : (cols[0] || '');
-      const sideA = idxA     >= 0 ? (cols[idxA]     || '') : (cols[1] || '');
-      const sideB = idxB     >= 0 ? (cols[idxB]     || '') : (cols[2] || '');
-      const num   = idxNum   >= 0 ? (cols[idxNum]   || String(i + 1)) : String(i + 1);
-      const info  = idxInfo  >= 0 ? (cols[idxInfo]  || '') : '';
-
-      cardCount++;
+      const title = cols[idxTitle >= 0 ? idxTitle : 0] || '';
+      const sideA = cols[idxA     >= 0 ? idxA     : 1] || '';
+      const sideB = cols[idxB     >= 0 ? idxB     : 2] || '';
+      const num   = idxNum >= 0 ? (cols[idxNum] || String(i + 1)) : String(i + 1);
+      count++;
 
       const card = document.createElement('div');
       card.className = 'jukebox-card';
       card.innerHTML = `
         <div class="j-bar"></div>
-        <div class="j-strip">
-          <div class="j-side">
-            <span class="j-side-label">A</span>
-            <span class="j-side-text">${esc(sideA)}</span>
-          </div>
-          <div class="j-sep"></div>
-          <div class="j-side">
-            <span class="j-side-label">B</span>
-            <span class="j-side-text">${esc(sideB)}</span>
-          </div>
+        <div class="j-strip">${esc(title)}</div>
+        <div class="j-side-a">
+          <span class="j-label">A</span>
+          <span class="j-song">${esc(sideA)}</span>
         </div>
-        <div class="j-title">${esc(title)}</div>
+        <div class="j-side-b">
+          <span class="j-label">B</span>
+          <span class="j-song">${esc(sideB)}</span>
+        </div>
         <div class="j-num">${esc(num)}</div>
-        ${info ? `<div class="j-info">${esc(info)}</div>` : ''}
       `;
       container.appendChild(card);
     });
 
-    const perPage = 24;
-    const pages = Math.ceil(cardCount / perPage);
+    const pages = Math.ceil(count / 24);
     document.getElementById('stats').textContent =
-      `Generated ${cardCount} cards — approx. ${pages} A4 page(s) (~${perPage} per page)`;
+      `${count} card${count !== 1 ? 's' : ''} — approx. ${pages} A4 page${pages !== 1 ? 's' : ''} (~24 per page)`;
   }
 
   window.addEventListener('load', generate);
