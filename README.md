@@ -1,16 +1,16 @@
 # Rock-Ola Cover Generator
 
-Generator okładek (title strips) do maszyny grającej.
+Generate title strips for a jukebox machine.
 
-## Użycie
+## Usage
 
-Otwórz `rockola-generator.html` bezpośrednio w przeglądarce — nie wymaga serwera.
+Open `rockola-generator.html` directly in a browser — no server required.
 
-1. Wklej dane CSV lub wgraj plik `.csv`
-2. Kliknij **Generuj okładki**
-3. Kliknij **Drukuj**
+1. Paste CSV data or upload a `.csv` file
+2. Click **Generate covers**
+3. Click **Print**
 
-## Format CSV
+## CSV Format
 
 ```
 Title,SideA,SideB
@@ -18,18 +18,18 @@ ABBA,Fernando,Life
 The Beatles,Hey Jude,Revolution
 ```
 
-Opcjonalne kolumny: `Num` (własna numeracja slotu), `Info` (dodatkowy opis).
+Optional columns: `Num` (custom slot number), `Info` (additional label).
 
-## Wymiary karty
+## Card dimensions
 
-**7,5 × 2,4 cm** — pasuje do standardowych slotów maszyny grającej.
+**7.5 × 2.4 cm** — fits standard jukebox title strip slots.
 
-Na jednej stronie A4 mieści się ok. 24 okładek (2 kolumny).
+Approx. 24 cards per A4 sheet (2 columns).
 
-## Pliki
+## Files
 
-| Plik | Opis |
-|------|------|
-| `rockola-generator.html` | Generator — otwórz w przeglądarce |
-| `Rockola_dane.ods` | Przykładowe dane (LibreOffice Calc) |
-| `Rockola_TXT.odt` | Szablon okładki (LibreOffice Writer) |
+| File | Description |
+|------|-------------|
+| `rockola-generator.html` | Generator — open in browser |
+| `Rockola_dane.ods` | Sample data (LibreOffice Calc) |
+| `Rockola_TXT.odt` | Card template (LibreOffice Writer) |

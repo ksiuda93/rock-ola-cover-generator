@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rockola — Generator okładek</title>
+  <title>Rock-Ola Cover Generator</title>
   <style>
-    /* ========== EKRAN ========== */
+    /* === SCREEN === */
     * { box-sizing: border-box; }
 
     body {
@@ -95,7 +95,7 @@
       margin-top: 8px;
     }
 
-    /* ========== PREVIEW KONTENERA ========== */
+    /* === PREVIEW === */
     .preview-wrapper {
       background: white;
       border-radius: 8px;
@@ -115,7 +115,7 @@
       gap: 4mm;
     }
 
-    /* ========== KARTA ROCKOLA ========== */
+    /* === JUKEBOX CARD === */
     .jukebox-card {
       width: 7.5cm;
       height: 2.4cm;
@@ -123,10 +123,10 @@
       position: relative;
       overflow: hidden;
       flex-shrink: 0;
-      border: 1px solid #8a9db0; /* widoczna ramka do wycinania */
+      border: 1px solid #8a9db0;
     }
 
-    /* Niebieski poziomy pasek */
+    /* Blue horizontal bar */
     .j-bar {
       position: absolute;
       left: 0; right: 0;
@@ -135,7 +135,7 @@
       top: 1.03cm;
     }
 
-    /* Biały prostokąt z niebieską obwódką */
+    /* White strip with blue border */
     .j-strip {
       position: absolute;
       left: 1cm;
@@ -181,7 +181,7 @@
       flex-shrink: 0;
     }
 
-    /* Tytuł wykonawcy — górna część */
+    /* Artist name — top area */
     .j-title {
       position: absolute;
       top: 0; left: 0.2cm; right: 0.2cm;
@@ -197,7 +197,7 @@
       overflow: hidden;
     }
 
-    /* Numer w lewym dolnym rogu */
+    /* Slot number — bottom left */
     .j-num {
       position: absolute;
       bottom: 0.08cm;
@@ -207,7 +207,7 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Rok/info opcjonalny */
+    /* Optional info — bottom right */
     .j-info {
       position: absolute;
       bottom: 0.08cm;
@@ -229,7 +229,7 @@
       font-size: 0.9rem;
     }
 
-    /* ========== DRUK ========== */
+    /* === PRINT === */
     @media print {
       html, body {
         margin: 0;
@@ -255,14 +255,9 @@
       }
 
       .jukebox-card {
-        /* Karty NIE są skalowane — rozmiar fizyczny */
         break-inside: avoid;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-      }
-
-      /* Zapobiega ucięciu stron w środku karty */
-      .jukebox-card {
         page-break-inside: avoid;
       }
     }
@@ -271,12 +266,12 @@
 <body>
 
 <div class="controls">
-  <h1>Rockola — Generator okładek</h1>
-  <p class="hint">Wklej dane CSV lub wgraj plik .csv. Kolumny: <code>Title</code>, <code>SideA</code>, <code>SideB</code> (opcjonalnie: <code>Num</code>, <code>Info</code>)</p>
+  <h1>Rock-Ola Cover Generator</h1>
+  <p class="hint">Paste CSV data or upload a .csv file. Columns: <code>Title</code>, <code>SideA</code>, <code>SideB</code> (optional: <code>Num</code>, <code>Info</code>)</p>
 
   <div class="row">
     <div class="col">
-      <label>Dane CSV:</label>
+      <label>CSV data:</label>
       <textarea id="csvInput">Title,SideA,SideB
 ABBA,Fernando,Life
 The Beatles,Hey Jude,Revolution
@@ -286,52 +281,52 @@ Frank Sinatra,My Way,New York New York
 Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     </div>
     <div class="col">
-      <label>Lub wgraj plik CSV:</label>
+      <label>Or upload a CSV file:</label>
       <div class="file-zone" onclick="document.getElementById('fileInput').click()">
-        <div>📁 Kliknij by wybrać plik</div>
+        <div>&#128193; Click to select a file</div>
         <div style="font-size:0.7rem">(.csv, .txt)</div>
         <input type="file" id="fileInput" accept=".csv,.txt" onchange="loadFile(this)">
       </div>
 
       <div class="sep-row">
-        <span>Separator kolumn:</span>
+        <span>Column separator:</span>
         <select id="separator">
-          <option value="auto">Auto (,  lub  ;)</option>
-          <option value=",">Przecinek (,)</option>
-          <option value=";">Średnik (;)</option>
-          <option value="\t">Tabulator</option>
+          <option value="auto">Auto (,  or  ;)</option>
+          <option value=",">Comma (,)</option>
+          <option value=";">Semicolon (;)</option>
+          <option value="\t">Tab</option>
         </select>
       </div>
     </div>
   </div>
 
   <div class="btn-row">
-    <button class="btn-primary" onclick="generate()">▶ Generuj okładki</button>
-    <button class="btn-print" onclick="window.print()">🖨 Drukuj</button>
+    <button class="btn-primary" onclick="generate()">&#9654; Generate covers</button>
+    <button class="btn-print" onclick="window.print()">&#128438; Print</button>
   </div>
   <div class="stats" id="stats"></div>
 </div>
 
 <div class="preview-wrapper">
-  <div class="preview-title" id="previewTitle">Podgląd — karty 7,5 × 2,4 cm</div>
+  <div class="preview-title" id="previewTitle">Preview — cards 7.5 &times; 2.4 cm</div>
   <div class="cards-grid" id="cards">
-    <div class="empty-msg">Naciśnij „Generuj okładki" aby zobaczyć podgląd.</div>
+    <div class="empty-msg">Click &ldquo;Generate covers&rdquo; to see a preview.</div>
   </div>
 </div>
 
 <script>
-  /* ---- Wykryj separator ---- */
+  /* Detect separator */
   function detectSep(text) {
     const firstLine = text.split('\n')[0];
-    const commas    = (firstLine.match(/,/g)   || []).length;
-    const semis     = (firstLine.match(/;/g)   || []).length;
-    const tabs      = (firstLine.match(/\t/g)  || []).length;
-    if (tabs >= commas && tabs >= semis)   return '\t';
-    if (semis >= commas && semis >= tabs)  return ';';
+    const commas = (firstLine.match(/,/g)  || []).length;
+    const semis  = (firstLine.match(/;/g)  || []).length;
+    const tabs   = (firstLine.match(/\t/g) || []).length;
+    if (tabs >= commas && tabs >= semis)  return '\t';
+    if (semis >= commas && semis >= tabs) return ';';
     return ',';
   }
 
-  /* ---- Parser CSV (uwzględnia cudzysłowy) ---- */
+  /* CSV parser (handles quoted fields) */
   function parseCSV(text, sep) {
     if (sep === 'auto' || !sep) sep = detectSep(text);
 
@@ -344,7 +339,7 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
       for (let i = 0; i < line.length; i++) {
         const ch = line[i];
         if (ch === '"') {
-          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
           else inQ = !inQ;
         } else if (!inQ && line[i] === sep) {
           cols.push(cur.trim()); cur = '';
@@ -358,7 +353,7 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     return rows;
   }
 
-  /* ---- Wczytaj plik ---- */
+  /* Load file */
   function loadFile(input) {
     const file = input.files[0];
     if (!file) return;
@@ -370,15 +365,15 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     reader.readAsText(file, 'UTF-8');
   }
 
-  /* ---- Escape HTML ---- */
+  /* Escape HTML */
   function esc(s) {
     return String(s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;');
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
-  /* ---- Generuj karty ---- */
+  /* Generate cards */
   function generate() {
     const raw = document.getElementById('csvInput').value;
     const sep = document.getElementById('separator').value;
@@ -386,7 +381,7 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
 
     if (rows.length < 2) {
       document.getElementById('cards').innerHTML =
-        '<div class="empty-msg">Brak danych — sprawdź format CSV.</div>';
+        '<div class="empty-msg">No data — check your CSV format.</div>';
       return;
     }
 
@@ -401,18 +396,18 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
     const container = document.getElementById('cards');
     container.innerHTML = '';
 
-    let cardNum = 0;
+    let cardCount = 0;
 
     data.forEach((cols, i) => {
-      if (cols.every(c => !c)) return; // pusta linia
+      if (cols.every(c => !c)) return; // skip empty rows
 
       const title = idxTitle >= 0 ? (cols[idxTitle] || '') : (cols[0] || '');
       const sideA = idxA     >= 0 ? (cols[idxA]     || '') : (cols[1] || '');
       const sideB = idxB     >= 0 ? (cols[idxB]     || '') : (cols[2] || '');
-      const num   = idxNum   >= 0 ? (cols[idxNum]   || String(i+1)) : String(i+1);
+      const num   = idxNum   >= 0 ? (cols[idxNum]   || String(i + 1)) : String(i + 1);
       const info  = idxInfo  >= 0 ? (cols[idxInfo]  || '') : '';
 
-      cardNum++;
+      cardCount++;
 
       const card = document.createElement('div');
       card.className = 'jukebox-card';
@@ -436,14 +431,12 @@ Queen,Bohemian Rhapsody,We Will Rock You</textarea>
       container.appendChild(card);
     });
 
-    // Ile kart na stronę A4 (2 kolumny × ~12 wierszy)
     const perPage = 24;
-    const pages = Math.ceil(cardNum / perPage);
+    const pages = Math.ceil(cardCount / perPage);
     document.getElementById('stats').textContent =
-      `Wygenerowano ${cardNum} okładek — ok. ${pages} strona/stron A4 (po ~${perPage} na stronie)`;
+      `Generated ${cardCount} cards — approx. ${pages} A4 page(s) (~${perPage} per page)`;
   }
 
-  // Generuj od razu przy starcie
   window.addEventListener('load', generate);
 </script>
 </body>
